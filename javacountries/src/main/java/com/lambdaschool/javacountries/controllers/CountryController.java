@@ -1,6 +1,7 @@
 package com.lambdaschool.javacountries.controllers;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.lambdaschool.javacountries.models.Country;
 import com.lambdaschool.javacountries.repositories.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,17 @@ public class CountryController {
     }
 
     // http://localhost:2019/population/min
+    @GetMapping(value = "/population/min", produces = "application/json")
+    public ResponseEntity<?> getMinPopulation(){
+        List<Country> myCountries = new ArrayList<>();
+        countryRepository.findAll().iterator().forEachRemaining(myCountries::add);
+
+        myCountries.sort((c1, c2) -> (int)(c1.getPopulation() - c2.getPopulation()));
+
+        Country minPop = myCountries.get(0);
+
+        return new ResponseEntity<>(minPop, HttpStatus.OK);
+    }
 
     // http://localhost:2019/population/max
 
