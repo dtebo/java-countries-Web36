@@ -1,5 +1,6 @@
 package com.lambdaschool.javacountries.controllers;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.lambdaschool.javacountries.models.Country;
 import com.lambdaschool.javacountries.repositories.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,20 @@ public class CountryController {
     }
 
     // http://localhost:2019/population/total
+    @GetMapping(value = "/population/total", produces = "application/json")
+    public ResponseEntity<?> getPopulationTotal(){
+        List<Country> myCountries = new ArrayList<>();
+        countryRepository.findAll().iterator().forEachRemaining(myCountries::add);
+
+        double total = 0.0;
+        for(Country c : myCountries){
+            total += c.getPopulation();
+        }
+
+        System.out.println("Population Total " + total);
+
+        return  new ResponseEntity<>(total, HttpStatus.OK);
+    }
 
     // http://localhost:2019/population/min
 
